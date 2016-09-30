@@ -14,6 +14,7 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.lang.Math;
+import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
 public class MainActivity extends Activity implements OnClickListener {
@@ -208,6 +209,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+        DecimalFormat df = new DecimalFormat( ".######## ");
         switch (v.getId()) {
             // the response of each button 0-9
             case R.id.btnZero:
@@ -250,8 +252,12 @@ public class MainActivity extends Activity implements OnClickListener {
 
             case R.id.btnDot:
                 String stringDot = expressionResult.getText().toString();
-                if (stringDot.isEmpty() ||  lastOP == 0 || stringDot.equals("-")) {
+                if (stringDot.isEmpty()) {
                     stringDot += "0";
+                }
+                if (stringDot.equals("-")) {
+                    expressionResult.setText("-0.");
+                    return;
                 }
                 if (lastInput == 1 && !stringDot.isEmpty() && !stringDot.equals("-")){
                     expressionResult.setText("0.");
@@ -302,7 +308,8 @@ public class MainActivity extends Activity implements OnClickListener {
                     expressionResult.setText(String.valueOf("Error"));
                     break;
                 }
-                expressionResult.setText(String.valueOf(result));
+
+                expressionResult.setText(String.valueOf(df.format(result)));
                 lastInput = 1;
                 lastOP = 0;
                 break;
@@ -318,11 +325,13 @@ public class MainActivity extends Activity implements OnClickListener {
                     result = Double.valueOf(expressionResult.getText().toString());
                 }
                 result = Math.sqrt(result);
+
+
                 if(Double.isInfinite(result) || Double.isNaN(result)){
                     expressionResult.setText(String.valueOf("Error"));
                     break;
                 }
-                expressionResult.setText(String.valueOf(result));
+                expressionResult.setText(String.valueOf(df.format(result)));
                 lastInput = 1;
                 lastOP = 0;
                 break;
