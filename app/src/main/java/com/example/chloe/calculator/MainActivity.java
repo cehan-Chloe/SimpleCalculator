@@ -66,9 +66,11 @@ public class MainActivity extends Activity implements OnClickListener {
             lastOP = 0;
             return;
         }
-        if (lastInput == 1) {
+        String string = expressionResult.getText().toString();
+        String decimalPattern = "((-)?(0)*\\.)";
+        boolean match = Pattern.matches(decimalPattern, string);
+        if (lastInput == 1 && !match) {
             expressionResult.setText(null);
-
         }
         String myString = expressionResult.getText().toString();
         myString += number;
@@ -78,7 +80,11 @@ public class MainActivity extends Activity implements OnClickListener {
 
     public void binaryInputOperator(int curOP) {
         String myString = expressionResult.getText().toString();
-        if (myString.isEmpty()){
+        if (myString.isEmpty() || myString.equals("-")) {
+            if (curOP == 2 && myString.isEmpty()) {
+                myString = "-";
+                expressionResult.setText(myString);
+            }
             return;
         }
         updateResult();
@@ -244,10 +250,13 @@ public class MainActivity extends Activity implements OnClickListener {
 
             case R.id.btnDot:
                 String stringDot = expressionResult.getText().toString();
-                if (stringDot.isEmpty()) {
-                    stringDot = "0";
+                if (stringDot.isEmpty() ||  lastOP == 0 || stringDot.equals("-")) {
+                    stringDot += "0";
                 }
-
+                if (lastInput == 1 && !stringDot.isEmpty() && !stringDot.equals("-")){
+                    expressionResult.setText("0.");
+                    return;
+                }
                 String decimalPattern = "((-)?[0-9]*)\\.([0-9]*)";
                 boolean match = Pattern.matches(decimalPattern, stringDot);
                 if (match){
@@ -280,7 +289,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
             case R.id.btnPercent:
                 String stringPercent = expressionResult.getText().toString();
-                if (stringPercent.isEmpty()){
+                if (stringPercent.isEmpty() || stringPercent.equals("-")) {
                     return;
                 }
                 if (lastOP != 0) {
@@ -300,7 +309,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
             case R.id.btnSqrt:
                 String stringSqrt = expressionResult.getText().toString();
-                if (stringSqrt.isEmpty()){
+                if (stringSqrt.isEmpty() || stringSqrt.equals("-")) {
                     return;
                 }
                 if (lastOP != 0) {
@@ -333,7 +342,11 @@ public class MainActivity extends Activity implements OnClickListener {
                 break;
 
             case R.id.btnM_plus:
-                memory += Double.valueOf(expressionResult.getText().toString());
+                String stringPlus = expressionResult.getText().toString();
+                if (stringPlus.isEmpty() || stringPlus.equals("-")){
+                    return;
+                }
+                memory += Double.valueOf(stringPlus);
                 result = memory;
                 expressionResult.setText(String.valueOf(result));
                 lastInput = 1;
@@ -341,7 +354,11 @@ public class MainActivity extends Activity implements OnClickListener {
                 break;
 
             case R.id.btnM_minus:
-                memory -= Double.valueOf(expressionResult.getText().toString());
+                String stringMinus = expressionResult.getText().toString();
+                if (stringMinus.isEmpty() || stringMinus.equals("-")){
+                    return;
+                }
+                memory -= Double.valueOf(stringMinus);
                 result = memory;
                 expressionResult.setText(String.valueOf(result));
                 lastInput = 1;
