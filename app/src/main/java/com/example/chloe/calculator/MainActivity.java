@@ -82,7 +82,7 @@ public class MainActivity extends Activity implements OnClickListener {
     public void binaryInputOperator(int curOP) {
         String myString = expressionResult.getText().toString();
         if (myString.isEmpty() || myString.equals("-")) {
-            if (curOP == 2 && myString.isEmpty()) {
+            if (curOP == 2 && myString.isEmpty() || curOP == 2 && lastOP == 0 && myString.isEmpty() ) {
                 myString = "-";
                 expressionResult.setText(myString);
             }
@@ -248,6 +248,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 expressionResult.setText(null);
                 result = 0;
                 lastOP = 0;
+                lastInput = 0;
                 break;
 
             case R.id.btnDot:
